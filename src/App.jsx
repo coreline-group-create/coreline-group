@@ -220,7 +220,7 @@ export default function CorelineGroupFinalWebsite() {
 
       <footer className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-7 py-10 text-[11px] uppercase tracking-[0.28em] text-white/40 lg:flex-row lg:items-center lg:justify-between lg:px-10">
-          <p>© The Coreline Group</p>
+          <p>© The Coreline Group 2026</p>
           <div className="flex gap-8">
             <span>thecorelinegroup.com</span>
             <span>European Brand Platform</span>
