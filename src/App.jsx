@@ -1,11 +1,307 @@
 import { useEffect, useState } from "react";
 
-export default function CorelineGroupFinalWebsite() {
+const styles = {
+  page: (loaded) => ({
+    minHeight: "100vh",
+    background: "#000",
+    color: "#fff",
+    fontFamily: '"Helvetica Neue", Helvetica, Arial, system-ui, sans-serif',
+    transition: "opacity 700ms ease",
+    opacity: loaded ? 1 : 0,
+    backgroundImage:
+      "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06), transparent 60%), radial-gradient(circle at 80% 100%, rgba(255,255,255,0.04), transparent 60%)",
+  }),
+  header: {
+    position: "sticky",
+    top: 0,
+    zIndex: 50,
+    borderBottom: "1px solid rgba(255,255,255,0.1)",
+    background: "rgba(0,0,0,0.95)",
+    backdropFilter: "blur(10px)",
+  },
+  headerInner: {
+    maxWidth: 1280,
+    margin: "0 auto",
+    padding: "12px 20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 20,
+  },
+  logo: {
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    color: "#fff",
+    textDecoration: "none",
+    flexShrink: 0,
+  },
+  nav: {
+    display: "flex",
+    gap: 24,
+    fontSize: 10,
+    textTransform: "uppercase",
+    letterSpacing: "0.26em",
+    color: "rgba(255,255,255,0.5)",
+  },
+  navLink: {
+    color: "rgba(255,255,255,0.5)",
+    textDecoration: "none",
+  },
+  main: {
+    position: "relative",
+    overflow: "hidden",
+  },
+  section: {
+    borderBottom: "1px solid rgba(255,255,255,0.1)",
+  },
+  container: {
+    maxWidth: 1280,
+    margin: "0 auto",
+    padding: "56px 28px",
+  },
+  heroWrap: {
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+  },
+  heroGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: 48,
+  },
+  smallText: {
+    marginBottom: 24,
+    color: "rgba(255,255,255,0.7)",
+    fontSize: 16,
+    lineHeight: 1.5,
+  },
+  h1: {
+    margin: 0,
+    fontSize: "clamp(56px, 10vw, 128px)",
+    lineHeight: 0.9,
+    textTransform: "uppercase",
+    fontWeight: 900,
+    letterSpacing: "-0.03em",
+  },
+  largeP: {
+    marginTop: 32,
+    maxWidth: 900,
+    color: "rgba(255,255,255,0.8)",
+    fontSize: "clamp(18px, 2.1vw, 30px)",
+    lineHeight: 1.5,
+  },
+  rightList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 22,
+    paddingTop: 8,
+    color: "rgba(255,255,255,0.72)",
+    fontSize: 13,
+    textTransform: "uppercase",
+    letterSpacing: "0.28em",
+  },
+  listRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: 16,
+  },
+  listLine: {
+    width: 32,
+    height: 1,
+    background: "rgba(255,255,255,0.35)",
+  },
+  clSection: {
+    position: "relative",
+    borderBottom: "1px solid rgba(255,255,255,0.1)",
+  },
+  clBg: (offset) => ({
+    position: "absolute",
+    inset: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    pointerEvents: "none",
+    fontSize: "clamp(280px, 40vw, 620px)",
+    fontWeight: 900,
+    lineHeight: 1,
+    letterSpacing: "-0.03em",
+    color: "rgba(255,255,255,0.045)",
+    transform: `translate(${offset.x}px, ${offset.y}px)`,
+    transition: "transform 300ms ease",
+    userSelect: "none",
+  }),
+  twoCol: {
+    position: "relative",
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: 48,
+  },
+  h2Large: {
+    margin: 0,
+    fontSize: "clamp(54px, 7vw, 106px)",
+    lineHeight: 0.9,
+    textTransform: "uppercase",
+    fontWeight: 900,
+    letterSpacing: "-0.03em",
+  },
+  h2Mid: {
+    margin: 0,
+    fontSize: "clamp(42px, 6vw, 96px)",
+    lineHeight: 0.9,
+    textTransform: "uppercase",
+    fontWeight: 900,
+    letterSpacing: "-0.03em",
+  },
+  muted: {
+    color: "rgba(255,255,255,0.55)",
+  },
+  bodyBig: {
+    color: "rgba(255,255,255,0.78)",
+    fontSize: "clamp(20px, 2vw, 28px)",
+    lineHeight: 1.55,
+    maxWidth: 720,
+  },
+  bodyMed: {
+    marginTop: 24,
+    color: "rgba(255,255,255,0.62)",
+    fontSize: "clamp(18px, 1.6vw, 22px)",
+    lineHeight: 1.65,
+    maxWidth: 720,
+  },
+  capsLabel: {
+    marginBottom: 48,
+    color: "rgba(255,255,255,0.45)",
+    fontSize: 11,
+    textTransform: "uppercase",
+    letterSpacing: "0.34em",
+  },
+  capsGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: 48,
+  },
+  capsTitle: {
+    marginBottom: 24,
+    color: "rgba(255,255,255,0.55)",
+    fontSize: 11,
+    textTransform: "uppercase",
+    letterSpacing: "0.3em",
+  },
+  capsItem: {
+    margin: "0 0 16px 0",
+    color: "rgba(255,255,255,0.9)",
+    fontSize: "clamp(30px, 3vw, 44px)",
+    lineHeight: 1.15,
+  },
+  contactGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: 56,
+  },
+  contactTitle: {
+    margin: 0,
+    maxWidth: 720,
+    fontSize: "clamp(48px, 6vw, 78px)",
+    lineHeight: 0.95,
+    textTransform: "uppercase",
+    fontWeight: 900,
+    letterSpacing: "-0.03em",
+  },
+  contactRight: {
+    maxWidth: 520,
+    color: "rgba(255,255,255,0.85)",
+  },
+  contactLead: {
+    margin: 0,
+    fontSize: 22,
+    lineHeight: 1.2,
+    color: "rgba(255,255,255,0.85)",
+  },
+  contactSub: {
+    margin: "6px 0 0 0",
+    fontSize: 18,
+    lineHeight: 1.2,
+    color: "rgba(255,255,255,0.6)",
+  },
+  contactLabel: {
+    margin: "24px 0 12px 0",
+    fontSize: 11,
+    textTransform: "uppercase",
+    letterSpacing: "0.32em",
+    color: "rgba(255,255,255,0.4)",
+  },
+  email: {
+    display: "inline-block",
+    fontSize: "clamp(24px, 2vw, 28px)",
+    lineHeight: 1.1,
+    color: "#fff",
+    textDecoration: "underline",
+    textUnderlineOffset: 8,
+    textDecorationColor: "rgba(255,255,255,0.3)",
+  },
+  contactText: {
+    marginTop: 24,
+    fontSize: 18,
+    lineHeight: 1.6,
+    color: "rgba(255,255,255,0.55)",
+  },
+  footer: {
+    borderTop: "1px solid rgba(255,255,255,0.1)",
+  },
+  footerInner: {
+    maxWidth: 1280,
+    margin: "0 auto",
+    padding: "40px 28px",
+    display: "flex",
+    flexDirection: "column",
+    gap: 18,
+    color: "rgba(255,255,255,0.4)",
+    fontSize: 11,
+    textTransform: "uppercase",
+    letterSpacing: "0.28em",
+  },
+  footerLinks: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+};
+
+const capabilities = [
+  {
+    title: "Brand Architecture",
+    items: ["Positioning", "Product Architecture", "Category Strategy", "Capsule Development"],
+  },
+  {
+    title: "Production Infrastructure",
+    items: ["Manufacturing", "Supply Chain", "Logistics", "Fulfillment"],
+  },
+  {
+    title: "Distribution",
+    items: ["Retail Partnerships", "E-commerce", "Market Entry", "Territory Expansion"],
+  },
+];
+
+const rightList = [
+  "Brand Architecture",
+  "Production Infrastructure",
+  "Retail Distribution",
+  "European Market Expansion",
+];
+
+export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 300);
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
 
     const handleMove = (e) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 40;
@@ -13,74 +309,72 @@ export default function CorelineGroupFinalWebsite() {
       setOffset({ x, y });
     };
 
+    handleResize();
+    window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMove);
 
     return () => {
       clearTimeout(t);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMove);
     };
   }, []);
-  return (
-    <div className={`min-h-screen bg-black text-white relative font-["Helvetica_Neue",system-ui,sans-serif] selection:bg-white selection:text-black scroll-smooth transition-opacity duration-700 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_60%),radial-gradient(circle_at_80%_100%,rgba(255,255,255,0.04),transparent_60%)] ${loaded ? "opacity-100" : "opacity-0"}`}>
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 lg:px-10">
 
-          {/* Logo */}
-          <a href="#top" className="flex flex-shrink-0 items-center gap-3 text-white">
-            {/* Icon mark */}
-            <span className="flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M12 4L13.8 10.2L20 12L13.8 13.8L12 20L10.2 13.8L4 12L10.2 10.2L12 4Z" fill="currentColor"/>
+  return (
+    <div style={styles.page(loaded)}>
+      <header style={styles.header}>
+        <div style={styles.headerInner}>
+          <a href="#top" style={styles.logo}>
+            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg viewBox="0 0 24 24" style={{ width: 28, height: 28 }} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 4L13.8 10.2L20 12L13.8 13.8L12 20L10.2 13.8L4 12L10.2 10.2L12 4Z" fill="currentColor" />
               </svg>
             </span>
-
-            {/* Wordmark */}
-            <span className="flex flex-col leading-none">
-              <span className="text-[18px] font-bold uppercase tracking-[0.18em] whitespace-nowrap">
+            <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+              <span style={{ fontSize: 18, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.18em", whiteSpace: "nowrap" }}>
                 CORELINE GROUP
               </span>
-              <span className="mt-1 text-[9px] uppercase tracking-[0.36em] text-white/45">
+              <span style={{ marginTop: 4, fontSize: 9, textTransform: "uppercase", letterSpacing: "0.36em", color: "rgba(255,255,255,0.45)" }}>
                 EUROPEAN BRAND PLATFORM
               </span>
             </span>
           </a>
 
-          {/* Navigation desktop only */}
-          <nav className="hidden md:flex items-center gap-8 text-[10px] uppercase tracking-[0.26em] text-white/50">
-            <a href="#platform" className="hover:text-white transition-colors">Platform</a>
-            <a href="#capabilities" className="hover:text-white transition-colors">Capabilities</a>
-            <a href="#expansion" className="hover:text-white transition-colors">Expansion</a>
-            <a href="#contact" className="hover:text-white transition-colors">Contact</a>
-          </nav>
-
+          {!isMobile && (
+            <nav style={styles.nav}>
+              <a href="#platform" style={styles.navLink}>Platform</a>
+              <a href="#capabilities" style={styles.navLink}>Capabilities</a>
+              <a href="#expansion" style={styles.navLink}>Expansion</a>
+              <a href="#contact" style={styles.navLink}>Contact</a>
+            </nav>
+          )}
         </div>
       </header>
 
-      <main id="top" className="relative overflow-hidden">
-        <section id="platform" className="border-b border-white/10 min-h-screen flex items-center">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-7 py-14 lg:grid-cols-12 lg:px-10 lg:py-20">
-            <div className="lg:col-span-7">
-              <p className="mb-8 text-sm text-white/70 md:text-base">
-                Strategic European brand infrastructure for global artists and cultural brands.
-              </p>
-              <h1 className="max-w-4xl text-[56px] font-black uppercase leading-[0.9] tracking-tight sm:text-[72px] md:text-[96px] lg:text-[128px]">
-                European<br />Brand<br />Platform
-              </h1>
-              <p className="mt-10 max-w-3xl text-lg leading-9 text-white/80 md:text-[28px] md:leading-[1.5] lg:text-[30px]">
-                Coreline builds the European infrastructure behind global artist-led and cultural brands. From brand architecture to manufacturing, retail distribution and controlled market expansion across Europe.
-              </p>
-            </div>
+      <main id="top" style={styles.main}>
+        <section id="platform" style={{ ...styles.section, ...styles.heroWrap }}>
+          <div style={styles.container}>
+            <div style={styles.heroGrid}>
+              <div>
+                <p style={styles.smallText}>
+                  Strategic European brand infrastructure for global artists and cultural brands.
+                </p>
+                <h1 style={styles.h1}>
+                  European
+                  <br />
+                  Brand
+                  <br />
+                  Platform
+                </h1>
+                <p style={styles.largeP}>
+                  Coreline builds the European infrastructure behind global artist-led and cultural brands. From brand architecture to manufacturing, retail distribution and controlled market expansion across Europe.
+                </p>
+              </div>
 
-            <div className="lg:col-span-5 lg:pt-20">
-              <div className="space-y-6 pt-2 text-[13px] uppercase tracking-[0.28em] text-white/72 md:pt-10">
-                {[
-                  'Brand Architecture',
-                  'Production Infrastructure',
-                  'Retail Distribution',
-                  'European Market Expansion',
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-4">
-                    <span className="h-px w-8 bg-white/35" />
+              <div style={styles.rightList}>
+                {rightList.map((item) => (
+                  <div key={item} style={styles.listRow}>
+                    <span style={styles.listLine} />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -89,139 +383,132 @@ export default function CorelineGroupFinalWebsite() {
           </div>
         </section>
 
-        <section className="relative border-b border-white/10">
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
-            <span
-            style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
-            className="select-none text-[280px] font-black uppercase leading-none tracking-tight text-white/[0.045] transition-transform duration-300 sm:text-[360px] lg:text-[620px]"
-          >
-              CL
-            </span>
-          </div>
-
-          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-7 py-14 lg:grid-cols-12 lg:px-10 lg:py-24">
-            <div className="lg:col-span-6">
-              <h2 className="max-w-4xl text-[58px] font-black uppercase leading-[0.9] tracking-tight sm:text-[80px] lg:text-[106px]">
-                Building<br />Global<br />Brands<br /><span className="text-white/55">For Europe</span>
-              </h2>
-            </div>
-
-            <div className="flex items-center lg:col-span-6">
-              <p className="max-w-2xl text-xl leading-9 text-white/78 md:text-[28px] md:leading-[1.55] lg:ml-16">
-                Coreline develops and positions global artist and cultural brands for disciplined expansion across the European market.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-b border-white/10">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-14 px-7 py-14 lg:grid-cols-12 lg:px-10 lg:py-24">
-            <div className="lg:col-span-7">
-              <h2 className="max-w-5xl text-[54px] font-black uppercase leading-[0.92] tracking-tight sm:text-[76px] lg:text-[94px]">
-                The European Platform Behind Cultural Brands
-              </h2>
-            </div>
-
-            <div className="lg:col-span-5 lg:pt-5">
-              <p className="max-w-3xl text-xl leading-9 text-white/80 md:text-[28px] md:leading-[1.55]">
-                We build the infrastructure required to turn global cultural influence into scalable fashion and merchandise brands across Europe.
-              </p>
-              <p className="mt-8 max-w-3xl text-lg leading-8 text-white/62 md:text-[22px] md:leading-[1.65]">
-                Strategy, manufacturing infrastructure, retail partnerships and European market development.
-              </p>
+        <section style={styles.clSection}>
+          <div style={styles.clBg(offset)}>CL</div>
+          <div style={styles.container}>
+            <div style={styles.twoCol}>
+              <div>
+                <h2 style={styles.h2Large}>
+                  Building
+                  <br />
+                  Global
+                  <br />
+                  Brands
+                  <br />
+                  <span style={styles.muted}>For Europe</span>
+                </h2>
+              </div>
+              <div>
+                <p style={styles.bodyBig}>
+                  Coreline develops and positions global artist and cultural brands for disciplined expansion across the European market.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="capabilities" className="border-b border-white/10">
-          <div className="mx-auto max-w-7xl px-7 py-14 lg:px-10 lg:py-24">
-            <p className="mb-12 text-[11px] uppercase tracking-[0.34em] text-white/45">Capabilities</p>
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-16">
-              {[
-                {
-                  title: 'Brand Architecture',
-                  items: ['Positioning', 'Product Architecture', 'Category Strategy', 'Capsule Development'],
-                },
-                {
-                  title: 'Production Infrastructure',
-                  items: ['Manufacturing', 'Supply Chain', 'Logistics', 'Fulfillment'],
-                },
-                {
-                  title: 'Distribution',
-                  items: ['Retail Partnerships', 'E-commerce', 'Market Entry', 'Territory Expansion'],
-                },
-              ].map((group) => (
+        <section style={styles.section}>
+          <div style={styles.container}>
+            <div style={styles.twoCol}>
+              <div>
+                <h2 style={styles.h2Mid}>The European Platform Behind Cultural Brands</h2>
+              </div>
+              <div>
+                <p style={styles.bodyBig}>
+                  We build the infrastructure required to turn global cultural influence into scalable fashion and merchandise brands across Europe.
+                </p>
+                <p style={styles.bodyMed}>
+                  Strategy, manufacturing infrastructure, retail partnerships and European market development.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="capabilities" style={styles.section}>
+          <div style={styles.container}>
+            <p style={styles.capsLabel}>Capabilities</p>
+            <div
+              style={{
+                ...styles.capsGrid,
+                gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+              }}
+            >
+              {capabilities.map((group) => (
                 <div key={group.title}>
-                  <p className="mb-7 text-[11px] uppercase tracking-[0.3em] text-white/55">{group.title}</p>
-                  <div className="space-y-4 text-[34px] leading-[1.15] text-white/90 sm:text-[40px] lg:text-[44px]">
-                    {group.items.map((item) => (
-                      <p key={item}>{item}</p>
-                    ))}
-                  </div>
+                  <p style={styles.capsTitle}>{group.title}</p>
+                  {group.items.map((item) => (
+                    <p key={item} style={styles.capsItem}>{item}</p>
+                  ))}
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="expansion" className="border-b border-white/10">
-          <div className="mx-auto max-w-7xl px-7 py-14 lg:px-10 lg:py-24">
-            <div className="space-y-10">
-              <h2 className="max-w-5xl text-[42px] font-black uppercase leading-[0.9] tracking-tight sm:text-[58px] md:text-[72px] lg:text-[88px] xl:text-[96px]">
-                Controlled<br />European<br />Expansion
+        <section id="expansion" style={styles.section}>
+          <div style={styles.container}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+              <h2 style={styles.h2Mid}>
+                Controlled
+                <br />
+                European
+                <br />
+                Expansion
               </h2>
-              <p className="max-w-3xl text-[18px] leading-[1.55] text-white/78 sm:text-[22px] md:text-[28px] md:leading-[1.55]">
+              <p style={styles.bodyBig}>
                 We build long-term brand platforms designed for disciplined growth across Europe.
               </p>
             </div>
           </div>
         </section>
 
-        <section id="contact" className="border-b border-white/10">
-  <div className="mx-auto grid max-w-7xl grid-cols-1 gap-20 px-7 py-16 lg:grid-cols-12 lg:px-10 lg:py-28">
+        <section id="contact" style={styles.section}>
+          <div style={styles.container}>
+            <div
+              style={{
+                ...styles.contactGrid,
+                gridTemplateColumns: isMobile ? "1fr" : "7fr 5fr",
+              }}
+            >
+              <div>
+                <h2 style={styles.contactTitle}>
+                  Start a
+                  <br />
+                  Conversation
+                  <br />
+                  <span style={styles.muted}>With Coreline</span>
+                </h2>
+              </div>
 
-    {/* LEFT */}
-    <div className="lg:col-span-7">
-      <h2 className="max-w-2xl text-[48px] font-black uppercase leading-[0.95] tracking-tight sm:text-[64px] lg:text-[78px]">
-        Start a<br/>Conversation<br/><span className="text-white/55">With Coreline</span>
-      </h2>
-    </div>
+              <div style={styles.contactRight}>
+                <div>
+                  <p style={styles.contactLead}>Private Partnerships</p>
+                  <p style={styles.contactSub}>Artist & Cultural Brands</p>
+                </div>
 
-    {/* RIGHT */}
-    <div className="lg:col-span-5">
-      <div className="max-w-md space-y-7 text-white/85">
+                <p style={styles.contactLabel}>Contact</p>
 
-        <div className="space-y-1">
-          <p className="text-[22px] leading-tight text-white/85">Private Partnerships</p>
-          <p className="text-[18px] leading-tight text-white/60">Artist & Cultural Brands</p>
-        </div>
+                <a
+                  href="mailto:contact@thecorelinegroup.com?subject=Coreline%20Partnership%20Inquiry"
+                  style={styles.email}
+                >
+                  contact@thecorelinegroup.com
+                </a>
 
-        <div className="space-y-3 pt-2">
-          <p className="text-[11px] uppercase tracking-[0.32em] text-white/40">Contact</p>
-
-          <a
-            href="mailto:contact@thecorelinegroup.com?subject=Coreline%20Partnership%20Inquiry"
-            className="inline-block text-[24px] leading-tight underline decoration-white/30 underline-offset-8 transition hover:decoration-white md:text-[28px]"
-          >
-            contact@thecorelinegroup.com
-          </a>
-        </div>
-
-        <p className="text-[16px] leading-7 text-white/55 md:text-[18px] md:leading-[1.6]">
-          Introduce your brand, project or expansion objective via email. Coreline reviews a limited number of partnerships and will respond if there is a strategic fit.
-        </p>
-
-      </div>
-    </div>
-
-  </div>
-</section>
+                <p style={styles.contactText}>
+                  Introduce your brand, project or expansion objective via email. Coreline reviews a limited number of partnerships and will respond if there is a strategic fit.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
-      <footer className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-7 py-10 text-[11px] uppercase tracking-[0.28em] text-white/40 lg:flex-row lg:items-center lg:justify-between lg:px-10">
-          <p>© The Coreline Group 2026</p>
-          <div className="flex gap-8">
+      <footer style={styles.footer}>
+        <div style={styles.footerInner}>
+          <p style={{ margin: 0 }}>© The Coreline Group</p>
+          <div style={styles.footerLinks}>
             <span>thecorelinegroup.com</span>
             <span>European Brand Platform</span>
             <span>Private Partnerships</span>
